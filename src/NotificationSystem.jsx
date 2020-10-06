@@ -165,10 +165,15 @@ class NotificationSystem extends React.Component {
 
     if (this.props.newOnTop) {
       notifications.unshift(_notification);
+      if (this.props.maxItems !== -1 && notifications.length >= this.props.maxItems) {
+        notifications.splice(this.props.maxItems);
+      }
     } else {
       notifications.push(_notification);
+      if (this.props.maxItems !== -1 && notifications.length >= this.props.maxItems) {
+        notifications.splice(0, notifications.length - this.props.maxItems);
+      }
     }
-
 
     if (typeof _notification.onAdd === 'function') {
       notification.onAdd(_notification);
@@ -282,14 +287,16 @@ NotificationSystem.propTypes = {
   style: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   noAnimation: PropTypes.bool,
   allowHTML: PropTypes.bool,
-  newOnTop: PropTypes.bool
+  newOnTop: PropTypes.bool,
+  maxItems: PropTypes.number
 };
 
 NotificationSystem.defaultProps = {
   style: {},
   noAnimation: false,
   allowHTML: false,
-  newOnTop: false
+  newOnTop: false,
+  maxItems: -1
 };
 
 module.exports = NotificationSystem;
